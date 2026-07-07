@@ -1,0 +1,13 @@
+From my limited personal experience, I have not used Vagrant until now, and I have limited experience with Docker. Most of my professional experience virtualization experience has been with virtual machines or virtual environments. While I have used Docker in a professional and educational settings, it was limited and I never received a formal education on how to use docker until doing this course. 
+
+From what I have read, the main difference between Vagrant and Docker is what they attempt to virtualize. Vagrant manages virtual machines, and docker manages containers. 
+
+Vagrant also doesn’t do the virtualization itself as it only manages virtual machines. Vagrant is more of a wrapper that sits on top of a provider such as VirtualBox, VMware, AWS or even Docker. 
+
+Docker packages an application and its dependencies into an image, then runs that image as a container. The container doesn’t use its own OS like in VMs, it instead uses the host machine’s kernel and isolates the process, filesystem, and network namespace. Which leads to faster startup times compared to VMs. 
+
+To answer the question of “which one would I prefer?”, it would depend on the situation and context as Vagrant and Docker are not direct competitors. Docker is mainly for application packaging and deployments to the cloud. Vagrant is more about creating Dev environments, testing the code across different operating systems, and creating environments for dev to work in. 
+
+So, I would imagine that if I wanted my devs to code a new application, they could use Vagrant to spin up virtual machines to have a consistent environment across the team. Then they could use Vagrant to spin up different virtual machines to test if our codebase can work on various operating systems in different virtual machines. Then when we deploy our codebase to the cloud, we can use Docker for deployment to the cloud.  
+
+However, given the current state of the industry, it is likely that I may not touch Vagrant, and I will mostly be using docker. I have noticed most of the documentation on cloud deployments refer to docker, and very few of my collogues that I interact with have heard of Vagrant or used Vagrant. Instead, they may use Docker Compose rather than Vagrant, or Kubernetes. 
