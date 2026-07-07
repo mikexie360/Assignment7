@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# publish.sh — pull the paper from git and push it into WordPress.
+# Run this INSIDE the VVV VM (vagrant ssh), where WP-CLI is available.
+#
+# First run  -> creates the WordPress page.
+# Later runs -> update the same page with the latest git content.
+#
+set -euo pipefail
+
+# ---- config (adjust to your setup) ----
+SITE_PATH="/srv/www/wordpress-one/public_html"  # your VVV WordPress site path
+REPO_DIR="$HOME/assignment7"                      # the git repo holding the paper
+PAPER_FILE="paper.html"                           # the paper file inside the repo
+POST_TITLE="Vagrant vs Docker"                    # WordPress page title
+ID_FILE="$REPO_DIR/.wp_post_id"                   # remembers the created page ID
+# ---------------------------------------
+
+cd "$REPO_DIR"
+
+echo ">>> Pulling latest paper from git"
+git pull --ff-only || echo "(no remote / nothing to pull — using local working copy)"
+
+if [[ -f "$ID_FILE" ]]; then
+  POST_ID="$(cat "$ID_FILE")"
+  echo ">>> Updating existing WordPress page (ID $POST_ID)"
+  wp post update "$POST_ID" "$PAPER_FILE" --path="$SITE_PATH"
+else
+  echo ">>> Creating the WordPress page for the first time"
+  POST_ID="$(wp post create "$PAPER_FILE" \
+      --post_type=page \
+      --post_title="$POST_TITLE" \
+      --post_status=publish \
+      --porcelain \
+      --path="$SITE_PATH")"
+  echo "$POST_ID" > "$ID_FILE"
+  echo ">>> Created page ID $POST_ID"
+fi
+
+echo ">>> Done. View the page in WordPress:"
+wp post get "$POST_ID" --field=guid --path="$SITE_PATH"
